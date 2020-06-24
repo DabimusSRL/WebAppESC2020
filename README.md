@@ -1,1 +1,2 @@
-# WebAppESC2020
+# ESART
+ Europa Square Augmented Reality Toolkit
