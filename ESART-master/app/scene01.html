@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>ESART</title>
+  <link rel="canonical" href="https://inspiredlabs.github.io/ar.js/markerless.html" />
+	<!-- Necessario per gestire video su iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Versione di aframe utilizzata per gli esempi originali: location based aframe v0.9.2 -->
+	<!-- Librerie A-Frame e AR.js da richiamare sempre -->
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script><!-- debug -->
+	<!-- Librerie utili per creare il portale -->
+  <script src='src/aframe-portal-door.js'></script>
+  <script src='src/threex-portal-door.js'></script>
+	<!-- Script base per l'acquisizione dei dati GPS -->
+  <script>
+    const log = console.log;
+    window.onload = () => {
+      let scene = document.querySelector('a-scene'); /* Apply to whole scene */
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          let gps = document.createAttribute('gps-entity-place'),
+            arjs = document.createAttribute('arjs'),
+            welcome = document.getElementById('welcome');
+
+          arjs.value = 'sourceType: webcam; sourceWidth: 1280; sourceHeight: 960; trackingMethod: best; debugUIEnabled: false;';
+          gps.value = `latitude: ${position.coords.latitude - 0.001}; longitude: ${position.coords.longitude + 0.001}`;
+          log(gps.value);
+          scene.setAttributeNode(gps); /* Apply to whole scene */
+          scene.setAttributeNode(arjs);
+        });
+      }
+
+    };
+  </script>
+</head>
+<body>
+  <!-- add some info at the top of the page -->
+	<div style='position: fixed; top: 10px; width:100%; text-align: center; z-index: 1;'>
+		 T009 - Adding info text and portal
+	</div>
+<a-scene vr-mode-ui="enabled: false"> <!-- Impostare a falso quando si lavora in AR. -->
+	<!-- Libreria di risorse audiovisive -->
+  <a-assets>
+    <img id="cddc-logo" src="assets/cddc-logo.jpg">
+    <video id="newsroom" src="assets/Newsroom.mp4" autoplay loop="false" webkit-playsinline playsinline>
+  </a-assets>
+	  
+  <a-entity id="wrapper" position="0 0 0">
+
+    <a-box position="0 0 0" rotation="0 45 0" color="#4CC3D9" shadow></a-box>
+    <a-sphere position="0 0 -5" radius="1.25" color="#EF2D5E" shadow></a-sphere>
+    <a-cylinder position="0 0 -10" radius="0.5" height="1.5" color="#FFC65D" shadow></a-cylinder>
+    <a-video src="#newsroom" width="16" height="9" position="0 0 -25"></a-video>
+    <a-plane position="0 0 -15.0" rotation="0 0 0" width="7" height="7" src="#cddc-logo" shadow></a-plane>
+
+    <a-text id="welcome" value="T008b - no look" scale="75 75 75" color="#FF0000" position="0 0 -150"></a-text>
+    <!-- look-at="[gps-camera]" -->
+    <a-anchor hit-testing-enabled='true'>
+
+			<!-- portal 360 with an image -->
+			<a-portal-door url='assets/360_topaz.png' position='0 0 0' scale='1 1 1' rotation='0 90 0'><a-portal-door>
+
+			<!-- portal 360 with an video -->
+			<!-- <a-portal-door url='videos/pano.webm' position='0 0 0' scale='2 2 2' rotation='0 90 0'><a-portal-door> -->
+			<!-- <a-portal-door url='videos/aframe-city-360.mp4' position='0 0 0' scale='2 2 2' rotation='0 90 0'><a-portal-door> -->
+
+		</a-anchor>
+
+  </a-entity><!-- /wrapper -->
+
+  <a-camera camera="fov: 60;" gps-camera rotation-reader></a-camera>
+</a-scene>
+</body>
+</html>
